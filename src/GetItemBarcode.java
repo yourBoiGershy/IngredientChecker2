@@ -8,11 +8,12 @@ import java.io.IOException;
 
 public class GetItemBarcode {
 
-	public static String name = "", string = "", name1 = "", name2 = "", name3 = "", name4 = "", name5 = "", link, link1, link2, link3, link4, link5;
+	public static String name, string, name1, name2, name3, name4, name5, link, link1, link2, link3, link4, link5;
 
 	public static String getBarcode(String a){
+		//initialize and declare bunch of variables
 		String product = a, filepath = "ICS4U/openfoodfactsSearch.txt", output = "";
-		name = "";
+		name = ""; 
 		name1 = "";
 		name2 = "";
 		name3 = "";
@@ -23,14 +24,18 @@ public class GetItemBarcode {
 		link2 = "";
 		link3 = "";
 		link4 = "";
+		//open the file
 		try{
 			IO.openInputFile(filepath);
 			int counter = 0;
 			String buffer = "";
+			//read the second line since the first is useless
 			buffer = IO.readLine();
 			buffer = IO.readLine();
+			//check if the buffer is not null
 			while(buffer!=null){
 				if(buffer.indexOf(product)>0&&counter<5){
+					//look for index of fifth tab
 					output += buffer.substring(0, buffer.indexOf("\t"))+", ";
 					int b = buffer.indexOf("\t");
 					b = buffer.indexOf("\t", b+1);
@@ -44,7 +49,7 @@ public class GetItemBarcode {
 							string = string.substring(0, string.indexOf(" ", 40))+"\n      "
 									+string.substring(string.indexOf(" ", 40));
 						}
-
+						//initialize names
 						switch (counter){
 							case 0: name1 = string; break;
 							case 1: name2 = string; break;
@@ -56,6 +61,7 @@ public class GetItemBarcode {
 
 					name += "\n\n\n";
 
+					//set links if they are provided
 					int c = buffer.indexOf("https://", 25);
 					if(c > -1&&counter<5){
 						switch(counter){
@@ -66,7 +72,7 @@ public class GetItemBarcode {
 							case 4: link4 = buffer.substring(c, buffer.indexOf("\t", c + 1)); System.out.println(link4); break;
 
 						}
-					}else if (c == -1 && counter < 5){
+					}else if (c == -1 && counter < 5){ //if links are not provided, set the image to question mark
 						switch(counter){
 							case 0: link = "Images/abc.jpg"; System.out.println("Images/abc.jpg"); break;
 							case 1: link1 = "Images/abc.jpg"; System.out.println("Images/abc.jpg"); break;
@@ -82,7 +88,7 @@ public class GetItemBarcode {
 			}
 
 			IO.closeInputFile();
-			while(counter < 5){
+			while(counter < 5){ //error trapping for searches with less than 5 searches
 				switch(counter) {
 					case 0:
 						link = "Images/abc.jpg";
